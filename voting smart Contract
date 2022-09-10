@@ -1,0 +1,41 @@
+// SPDX-License-Identifier: GPL-3.0
+
+pragma solidity >=0.7.0 <0.9.0;
+
+contract Voting{
+    address Admin;
+    uint voteCount;
+    struct Voter{
+        bool voted;
+        bool authorized;
+    }
+    mapping(address=>Voter) Voters;
+
+    constructor(){
+        Admin=msg.sender;
+    }
+
+    modifier onlyAdmin{
+        require(msg.sender==Admin);
+        _;
+    }
+
+    function allowed_Addresses(address _address) external onlyAdmin{
+        Voters[_address].authorized=true;
+    }
+
+    function Prohibited_Addresses(address _address) external onlyAdmin{
+        Voters[_address].authorized=false;
+    }
+
+    function VOTE() external {
+        require(Voters[msg.sender].authorized==true,"you are not allowed to vote");
+        require(Voters[msg.sender].voted==false,"you have already voted");
+        Voters[msg.sender].voted=true;
+        voteCount++;
+    }
+
+    function votingStatus() external view onlyAdmin returns(uint){
+        return voteCount;
+    }
+}
