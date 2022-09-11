@@ -1,0 +1,25 @@
+// SPDX-License-Identifier: GPL-3.0
+
+pragma solidity >=0.7.0 <0.9.0;
+
+contract fees{
+    struct student{
+        bool fee;
+    }
+
+    mapping(address=>student) students;
+
+    function payFee() external payable{
+        require(msg.value>=1 * 10*18,"plz pay the required fee");
+        students[msg.sender].fee=true;
+    }
+
+    function checkStatus() view external returns(uint){
+        if(students[msg.sender].fee==true){
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+}
